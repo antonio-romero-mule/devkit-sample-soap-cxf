@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:sunsetrise="http://www.mulesoft.org/schema/mule/sunsetrise" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" version="EE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/sunsetrise http://www.mulesoft.org/schema/mule/sunsetrise/1.0-SNAPSHOT/mule-sunsetrise.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
+    <sunsetrise:config name="Sunsetrise" username="foo" password="bar" doc:name="Sunsetrise">
+        <sunsetrise:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+        <reconnect/>
+    </sunsetrise:config>
+    <flow name="demoflowFlow1" doc:name="demoflowFlow1">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" doc:name="HTTP"/>
+        <sunsetrise:get-sun-set-rise-time config-ref="Sunsetrise" latitude="#[message.inboundProperties['lat']]" longitude="#[message.inboundProperties['lon']]" day="#[message.inboundProperties['d']]" month="#[message.inboundProperties['m']]" year="#[message.inboundProperties['y']]" doc:name="Sunsetrise"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <http:response-builder status="200" contentType="application/json" doc:name="HTTP Response Builder">
+            <http:cache-control directive="private" noCache="true" noStore="true"/>
+        </http:response-builder>
+    </flow>
+</mule>

@@ -1,0 +1,3 @@
+<!-- BEGIN_INCLUDE(sunsetrise-connector:get-sun-set-rise-time) -->
+<sunsetrise:get-sun-set-rise-time latitude="40" longitude="20" month="7" day="12" year="2013" />
+<!-- END_INCLUDE(sunsetrise-connector:get-sun-set-rise-time) -->

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="demoflow">
+    <global-element name="Sunsetrise" type="http://www.mulesoft.org/schema/mule/sunsetrise/config" entity-id="Sunsetrise#1">
+        <properties>
+            <property name="username" value="foo"/>
+            <property name="name" value="Sunsetrise"/>
+            <property name="password" value="bar"/>
+            <property name="auxiliary;index" value="1"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/core/reconnect;0">
+                <property name="isProcessed$$$$" value="true"/>
+                <property name="auxiliary;wrapIn" value="3"/>
+                <property name="auxiliary;index" value="3"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/sunsetrise/connection-pooling-profile;0">
+                <property name="exhaustedAction" value="WHEN_EXHAUSTED_GROW"/>
+                <property name="isProcessed$$$$" value="true"/>
+                <property name="auxiliary;wrapIn" value="2"/>
+                <property name="auxiliary;index" value="2"/>
+                <property name="initialisationPolicy" value="INITIALISE_ONE"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="demoflowFlow1" entity-id="b0273c82-6ce4-4e40-b38d-8cb7cb22872a">
+        <properties>
+            <property name="processingStrategy"/>
+            <property name="processingStrategy2"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="4"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
+                <graphicalData x="19" y="56" width="68" height="171"/>
+                <properties>
+                    <property name="port" value="8081"/>
+                    <property name="host" value="localhost"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="followRedirects"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="keep-alive"/>
+                    <property name="contentType"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="password"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="path"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="method"/>
+                    <property name="user"/>
+                    <property name="auxiliary;index" value="5"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="connector-ref"/>
+                </properties>
+            </endpoint>
+            <pattern name="Sunsetrise" type="http://www.mulesoft.org/schema/mule/sunsetrise/sunsetrise-connector" entity-id="Sunsetrise#2">
+                <graphicalData x="147" y="56" width="68" height="69"/>
+                <properties>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/sunsetrise/get-sun-set-rise-time"/>
+                    <property name="month" value="#[message.inboundProperties['m']]"/>
+                    <property name="longitude" value="#[message.inboundProperties['lon']]"/>
+                    <property name="year" value="#[message.inboundProperties['y']]"/>
+                    <property name="latitude" value="#[message.inboundProperties['lat']]"/>
+                    <property name="day" value="#[message.inboundProperties['d']]"/>
+                    <property name="config-ref" value="Sunsetrise"/>
+                    <property name="password"/>
+                    <property name="auxiliary;index" value="6"/>
+                </properties>
+            </pattern>
+            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="99e1bc33-2ae2-45f3-9691-9f856a2a85a9">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+            </pattern>
+            <pattern name="HTTP Response Builder" type="http://www.mulesoft.org/schema/mule/http/response-builder" entity-id="HTTP Response Builder#1">
+                <graphicalData x="275" y="56" width="137" height="69"/>
+                <properties>
+                    <property name="mustRevalidate" value="false"/>
+                    <property name="noCache" value="true"/>
+                    <property name="maxAge" value=""/>
+                    <property name="cookiesLabel" value=""/>
+                    <property name="noStore" value="true"/>
+                    <property name="updated"/>
+                    <property name="status" value="200"/>
+                    <property name="auxiliary;erased;maxAge" value="true"/>
+                    <property name="value" value=""/>
+                    <property name="contentType" value="application/json"/>
+                    <property name="directive" value="private"/>
+                    <property name="auxiliary;index" value="8"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/cache-control;429195296">
+                        <property name="mustRevalidate" value="false"/>
+                        <property name="noCache" value="true"/>
+                        <property name="maxAge" value=""/>
+                        <property name="noStore" value="true"/>
+                        <property name="auxiliary;erased;maxAge" value="true"/>
+                        <property name="isProcessed$$$$" value="true"/>
+                        <property name="directive" value="private"/>
+                        <property name="auxiliary;index" value="9"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/expires;87769599">
+                        <property name="value" value=""/>
+                        <property name="isProcessed$$$$" value="true"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/location;1969868551">
+                        <property name="isProcessed$$$$" value="true"/>
+                    </property-collection>
+                </properties>
+                <description></description>
+            </pattern>
+        </lane>
+    </flow>
+    <description></description>
+</mule-configuration>

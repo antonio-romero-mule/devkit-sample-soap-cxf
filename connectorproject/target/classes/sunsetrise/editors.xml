@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<namespace xmlns="http://www.mulesoft.org/schema/mule/tooling.attributes" xmlns:mule="http://www.mulesoft.org/schema/mule/core" url="http://www.mulesoft.org/schema/mule/sunsetrise" prefix="sunsetrise">
+  <global-cloud-connector caption="Sunsetrise" description="" icon="" localId="parentConfig" image="" abstract="true" extends="http://www.mulesoft.org/schema/mule/sunsetrise/abstractSunsetriseConnectorGeneric" connectivityTesting="on"></global-cloud-connector>
+  <nested caption="" description="" localId="connection-pooling-profile" abstract="true">
+    <label name="poolingProfileLabel" caption="Define connection pool configuration" description=""></label>
+    <integer defaultValue="5" min="0" step="0" name="maxActive" caption="Max active" description="Controls the maximum number of connections that can be borrowed from the pool at one time. When set to a negative value, there is no limit to the number of connections that may be active at one time. When maxActive is exceeded, the pool is said to be exhausted." fillLine="true"></integer>
+    <integer defaultValue="5" min="0" step="0" name="maxIdle" caption="Max idle" description="Controls the maximum number of connections that can sit idle in the pool at any time. When set to a negative value, there is no limit to the number of connections that may be idle at one time." fillLine="true"></integer>
+    <enum defaultValue="INITIALISE_ONE" name="initialisationPolicy" caption="Initialisation policy" description="Determines how connections in a pool should be initialized. The possible values are: INITIALISE_NONE (will not load any connection into the pool on startup), INITIALISE_ONE (will load one initial connection into the pool on startup), or INITIALISE_ALL (will load all connections in the pool on startup)" alwaysFill="true">
+      <option value="INITIALISE_NONE"></option>
+      <option value="INITIALISE_ONE"></option>
+      <option value="INITIALISE_ALL"></option>
+    </enum>
+    <enum defaultValue="WHEN_EXHAUSTED_GROW" name="exhaustedAction" caption="Exhausted action" description="Specifies the behavior of the connection pool when the pool is exhausted. Possible values are: &quot;WHEN_EXHAUSTED_FAIL&quot;, which will throw a NoSuchElementException, &quot;WHEN_EXHAUSTED_WAIT&quot;, which will block by invoking Object.wait(long) until a new or idle object is available, or WHEN_EXHAUSTED_GROW, which will create a new connection and return it, essentially making maxActive meaningless. If a positive maxWait value is supplied, it will block for at most that many milliseconds, after which a NoSuchElementException will be thrown. If maxThreadWait is a negative value, it will block indefinitely." alwaysFill="true">
+      <option value="WHEN_EXHAUSTED_WAIT"></option>
+      <option value="WHEN_EXHAUSTED_FAIL"></option>
+      <option value="WHEN_EXHAUSTED_GROW"></option>
+    </enum>
+    <integer defaultValue="5" min="0" step="0" name="maxWait" caption="Max wait" description="When exhausted action is Wait (or block) this is the amount of time in milliseconds that the pool will wait before failing. Setting a negative value will block indefinitely until an idle instance becomes available." fillLine="true"></integer>
+  </nested>
+  <nested caption="" description="" localId="reconnectionStrategyElement" abstract="true">
+    <label name="connectionLabel" caption="Define how mule should attempt to handle a connection failure" description=""></label>
+    <radioBoolean name="noReconnection" caption="Do not use a Reconnection strategy" description="Disable reconection strategy" fillLine="true"></radioBoolean>
+    <radioBoolean name="standardReconnection" caption="Standard Reconnection" description="A reconnection strategy that allows the user to configure how many times a reconnection should be attempted and how long to wait between attempts." fillLine="true"></radioBoolean>
+    <integer defaultValue="2000" min="1" max="2147483647" step="1" name="reconnectionFrequency" caption="Frequency (ms)" description="How often (in ms) to reconnect" controlled="standardReconnection" indented="true"></integer>
+    <integer defaultValue="2" min="1" max="2147483647" step="1" name="reconnectionAttemps" caption="Reconnection Attempts" description="How many reconnection attempts to make" controlled="standardReconnection,!reconnectForever" indented="true"></integer>
+    <boolean name="reconnectForever" caption="Reconnect Forever" description="A reconnection strategy that retries an infinite number of times at the specified frequency." controlled="standardReconnection" indented="true"></boolean>
+    <radioBoolean name="customReconnection" caption="Custom Reconnection" description="A user-defined reconnection strategy." fillLine="true"></radioBoolean>
+    <classname name="class" caption="Class" description="A class that implements the RetryPolicyTemplate interface." controlled="customReconnection" indented="true"></classname>
+    <childElement allowMultiple="true" name="http://www.springframework.org/schema/beans/property" caption="Properties" description="Property elements." controlled="customReconnection"></childElement>
+  </nested>
+  <global-cloud-connector caption="Sunsetrise" description="Global Sunsetrise configuration information." icon="icons/small/sunsetrise-connector-24x16.png" localId="config" image="icons/large/sunsetrise-connector-48x32.png" abstract="false" extends="http://www.mulesoft.org/schema/mule/sunsetrise/parentConfig" connectivityTesting="on">
+    <attribute-category caption="General" description="Sunsetrise configuration properties.">
+      <group id="sunsetriseGenericProperties" caption="Generic">
+        <name name="name" caption="Name" description="Give a name to this configuration so it can be later referenced by config-ref." required="true"></name>
+      </group>
+      <group id="connection" caption="Connection">
+        <string name="username" caption="Username" description="A username." required="false" javaType="java.lang.String"></string>
+        <string name="password" caption="Password" description="A password. (Note that this connector ignores the password.)." required="false" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+    <attribute-category caption="Pooling Profile" description="Pooling profile options.">
+      <group id="poolingProfile" caption="Pooling Profile">
+        <childElement inplace="true" name="http://www.mulesoft.org/schema/mule/sunsetrise/connection-pooling-profile" caption="" description=""></childElement>
+      </group>
+    </attribute-category>
+    <attribute-category caption="Reconnection" description="Reconnection options.">
+      <group id="reconnectionStrategies" caption="Strategies">
+        <childElement inplace="true" name="http://www.mulesoft.org/schema/mule/core/reconnectionStrategyElement" caption="" description="" valuePersistence="org.mule.tooling.ui.modules.core.widgets.meta.HTTPTransactionValuePersistence"></childElement>
+        <childElement allowSubTypes="true" allowedSubTypes="http://www.mulesoft.org/schema/mule/core/reconnect,http://www.mulesoft.org/schema/mule/core/reconnect-custom-strategy,http://www.mulesoft.org/schema/mule/core/reconnect-forever" name="http://www.mulesoft.org/schema/mule/core/abstractReconnectionStrategy" caption="" description="" visibleInDialog="false"></childElement>
+      </group>
+    </attribute-category>
+  </global-cloud-connector>
+  <cloud-connector caption="Abstractsunsetriseconnectorgeneric" description="Interact with Sunsetrise." icon="icons/small/sunsetrise-connector-24x16.png" localId="abstractSunsetriseConnectorGeneric" image="icons/large/sunsetrise-connector-48x32.png" abstract="true">
+    <attribute-category caption="General" description="General.">
+      <group id="abstractSunsetriseConnectorGeneric" caption="Generic">
+        <globalRef requiredType="http://www.mulesoft.org/schema/mule/sunsetrise/config" name="config-ref" caption="Config Reference" description="Specify which configuration to use for this invocation." required="true"></globalRef>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector aliasId="org.mule.tooling.ui.modules.core.pattern.sunsetrise" caption="Sunsetrise" description="Cloud Connector." icon="icons/small/sunsetrise-connector-24x16.png" localId="sunsetrise-connector" image="icons/large/sunsetrise-connector-48x32.png" extends="http://www.mulesoft.org/schema/mule/sunsetrise/abstractSunsetriseConnectorGeneric">
+    <attribute-category caption="General" description="General.">
+      <group id="sunsetriseConnectorGeneric" caption="Generic">
+        <modeSwitch alwaysCombo="true" name="Sunsetrise operations to execute" caption="Operation" description="Operation.">
+          <mode modeId="http://www.mulesoft.org/schema/mule/sunsetrise/get-sun-set-rise-time" modeLabel="Get sun set rise time"></mode>
+        </modeSwitch>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.tutorial.sunsetrise.definition.LatLonDate" caption="Get Sun Set Rise Time" icon="icons/small/sunsetrise-connector-24x16.png" localId="get-sun-set-rise-time" image="icons/large/sunsetrise-connector-48x32.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/sunsetrise/abstractSunsetriseConnectorGeneric">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="latitude" caption="Latitude" description="The desired latitude." required="true" javaType="float"></string>
+        <string name="longitude" caption="Longitude" description="The desired longitude." required="true" javaType="float"></string>
+        <integer min="0" step="1" name="day" caption="Day" description="The desired day." required="true" javaType="int"></integer>
+        <integer min="0" step="1" name="month" caption="Month" description="The desired month." required="true" javaType="int"></integer>
+        <integer min="0" step="1" name="year" caption="Year" description="The desired year." required="true" javaType="int"></integer>
+      </group>
+    </attribute-category>
+    <attribute-category caption="Connection" description="Connection.">
+      <group id="connection" caption="Connection">
+        <label caption="Use these fields to override the credentials defined in the Sunsetrise connector."></label>
+        <label caption=""></label>
+        <string name="username" caption="Username" description="A username." required="false" javaType="java.lang.String"></string>
+        <string name="password" caption="Password" description="A password. (Note that this connector ignores the password.)." required="false" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+</namespace>
